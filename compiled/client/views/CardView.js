@@ -27,8 +27,10 @@
       this.$el.children().detach().end().html;
       this.$el.html(this.template(this.model.attributes));
       if (!this.model.get('revealed')) {
-        return this.$el.addClass('covered');
+        this.$el.addClass('covered');
       }
+      this.$el.css('background-image', ("url(img/cards/" + this.model.attributes.rankName + "-" + this.model.attributes.suitName + ".png)").toLowerCase());
+      return console.log('rendering');
     };
 
     return CardView;

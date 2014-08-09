@@ -17,15 +17,29 @@
       this.isDealer = isDealer;
     };
 
+    Hand.prototype.dealNewGame = function(deck) {
+      console.log('dealing new game');
+      if (this.isDealer) {
+        return this.reset([this.deck.pop().flip(), this.deck.pop()], {
+          trigger: true
+        });
+      } else {
+        return this.reset([this.deck.pop(), this.deck.pop()], {
+          trigger: true
+        });
+      }
+    };
+
     Hand.prototype.hit = function() {
+      var playerScore;
       if (this.scores()[0] < 21) {
         this.add(this.deck.pop()).last();
       }
+      playerScore = this.scores();
       return this.checkScore();
     };
 
     Hand.prototype.stand = function() {
-      var _results;
       this.models[0].flip();
       if (this.scores().length > 1) {
         if (this.scores()[1] < 17) {
@@ -36,11 +50,10 @@
           }
         }
       }
-      _results = [];
       while (this.scores()[0] < 17) {
-        _results.push(this.add(this.deck.pop()).last());
+        this.add(this.deck.pop()).last();
       }
-      return _results;
+      return this.trigger('score');
     };
 
     Hand.prototype.checkScore = function() {

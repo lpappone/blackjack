@@ -11,11 +11,13 @@ class window.AppView extends Backbone.View
     "click .stand-button": -> @model.get('dealerHand').stand()
 
   initialize: ->
-    @model.get('playerHand').on('lost', @restart, @)
-    @model.get('playerHand').on('won', @restart, @)
+    @model.on('lost', @render(), @)
+    @model.on('won', @render(), @)
+    @model.on('tie', @render(), @)
     @render()
 
   render: ->
+    console.log('re rendering')
     @$el.children().detach()
     @$el.html @template()
     @$('.player-hand-container').html new HandView(collection: @model.get 'playerHand').el
@@ -24,6 +26,15 @@ class window.AppView extends Backbone.View
   restart: ->
     $('body div').remove()
     new AppView(model: new App()).$el.appendTo 'body'
+    # @$el.children().detach()
+    # @$el.html @template()
+    # console.log('here')
+    # @model.set 'deck', deck = new Deck()
+    # @model.set 'playerHand', deck.dealPlayer()
+    # @model.set 'dealerHand', deck.dealDealer()
+    # @$('.player-hand-container').html new HandView(collection: @model.get 'playerHand').el
+    # @$('.dealer-hand-container').html new HandView(collection: @model.get 'dealerHand').el
+
 
 
 

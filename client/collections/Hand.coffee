@@ -4,12 +4,20 @@ class window.Hand extends Backbone.Collection
 
   initialize: (array, @deck, @isDealer) ->
 
+  dealNewGame: (deck) ->
+    console.log('dealing new game')
+    if @isDealer
+      @reset([ @deck.pop().flip(), @deck.pop() ], {trigger: true})
+    else
+      @reset([ @deck.pop(), @deck.pop() ], {trigger: true})
+
+
 
   hit: ->
     if @scores()[0] < 21
       @add(@deck.pop()).last()
     playerScore = @scores()
-    checkScore()
+    @checkScore()
 
   stand: ->
     @models[0].flip()
@@ -21,13 +29,7 @@ class window.Hand extends Backbone.Collection
           @add(@deck.pop()).last()
     while @scores()[0] < 17
       @add(@deck.pop()).last()
-
-    if playerScore.length > 1 and playerScore[1] < 22
-      playerScore = playerScore[1]
-      else playerScore = playerScore[0]
-
-    if @scores()[]
-
+    @trigger 'score'
 
 
   checkScore: ->

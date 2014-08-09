@@ -22,12 +22,14 @@
     };
 
     AppView.prototype.initialize = function() {
-      this.model.get('playerHand').on('lost', this.restart, this);
-      this.model.get('playerHand').on('won', this.restart, this);
+      this.model.on('lost', this.render(), this);
+      this.model.on('won', this.render(), this);
+      this.model.on('tie', this.render(), this);
       return this.render();
     };
 
     AppView.prototype.render = function() {
+      console.log('re rendering');
       this.$el.children().detach();
       this.$el.html(this.template());
       this.$('.player-hand-container').html(new HandView({

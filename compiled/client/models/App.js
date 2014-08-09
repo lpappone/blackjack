@@ -16,17 +16,70 @@
       this.set('playerHand', deck.dealPlayer());
       this.set('dealerHand', deck.dealDealer());
       this.get('playerHand').on('lost', this.lost, this);
-      return this.get('playerHand').on('won', this.won, this);
+      this.get('playerHand').on('won', this.won, this);
+      return this.get('dealerHand').on('score', this.score, this);
+    };
+
+    App.prototype.newGame = function() {
+      var deck;
+      console.log('newgame');
+      this.set('deck', deck = new Deck());
+      this.get('playerHand').dealNewGame();
+      return this.get('dealerHand').dealNewGame();
     };
 
     App.prototype.lost = function() {
-      alert('You lost!');
-      return this.trigger('lost');
+      return setTimeout(((function(_this) {
+        return function() {
+          alert('You lost!');
+          return _this.newGame();
+        };
+      })(this)), 200);
     };
 
     App.prototype.won = function() {
-      alert('You won!');
-      return this.trigger('won');
+      return setTimeout(((function(_this) {
+        return function() {
+          alert('You won!');
+          return _this.newGame();
+        };
+      })(this)), 200);
+    };
+
+    App.prototype.tie = function() {
+      return setTimeout(((function(_this) {
+        return function() {
+          alert('You tied!');
+          return _this.newGame();
+        };
+      })(this)), 200);
+    };
+
+    App.prototype.score = function() {
+      var dealerScore, playerScore;
+      console.log('score triggered');
+      playerScore = this.get('playerHand').scores();
+      dealerScore = this.get('dealerHand').scores();
+      if (playerScore.length > 1 && playerScore[1] < 22) {
+        playerScore = playerScore[1];
+      } else {
+        playerScore = playerScore[0];
+      }
+      if (dealerScore.length > 1 && dealerScore[1] < 22) {
+        dealerScore = dealerScore[1];
+      } else {
+        dealerScore = dealerScore[0];
+      }
+      if (dealerScore > 21) {
+        this.won();
+      }
+      if (dealerScore > playerScore) {
+        return this.lost();
+      } else if (playerScore > dealerScore) {
+        return this.won();
+      } else {
+        return this.tie();
+      }
     };
 
     return App;
